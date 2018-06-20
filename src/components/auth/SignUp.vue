@@ -1,10 +1,12 @@
 <template>
-  <div class="col-sm-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 border rounded mt-4 bg-white">
+  <div class="col-sm-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 mt-4">
     <form
       class="p-3"
       @submit.prevent="onSubmit">
       <div class="form-group">
-        <label for="username">User name</label>
+        <label
+          class="text-white"
+          for="username">User name</label>
         <input
           v-validate="'required|min:4'"
           id="username"
@@ -12,7 +14,7 @@
           :class="{error : errors.has('username'), success: checkSuccess('username')}"
           name="username"
           type="text"
-          class="form-control"
+          class="form-control text-white"
           aria-describedby="username"
           placeholder="Enter name">
         <span
@@ -20,7 +22,9 @@
           class="errorText">{{ errors.first('username') }} </span>
       </div>
       <div class="form-group">
-        <label for="email">Email address</label>
+        <label
+          class="text-white"
+          for="email">Email address</label>
         <input
           v-validate="'required|email'"
           id="email"
@@ -28,7 +32,7 @@
           :class="{error : errors.has('email'), success: checkSuccess('email')}"
           name="email"
           type="email"
-          class="form-control"
+          class="form-control text-white"
           aria-describedby="email"
           placeholder="Enter email">
         <span
@@ -39,7 +43,9 @@
           class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label
+          class="text-white"
+          for="password">Password</label>
         <input
           v-validate="'required|min:6'"
           id="password"
@@ -47,7 +53,7 @@
           :class="{error : errors.has('password'), success: checkSuccess('password')}"
           name="password"
           type="password"
-          class="form-control"
+          class="form-control text-white"
           aria-describedby="password"
           placeholder="Password">
         <span
@@ -56,7 +62,7 @@
       </div>
       <button
         type="submit"
-        class="btn btn-primary">Submit</button>
+        class="btn btn-outline-primary text-white float-right">Submit</button>
       <span
         v-if="fixForm"
         class="errorText">Please fix form errors before submission</span>
@@ -112,16 +118,20 @@ export default {
 
 <style>
 .errorText {
-  color: firebrick;
+  color: orangered;
 }
-
 .error {
   border: 1px solid firebrick;
   box-shadow: 0 0 0 .125em rgba(255,56,96,.25);
 }
-
 .success {
   border: 1px solid #42b883;
   box-shadow: 0 0 0 .125em rgba(68, 238, 90, 0.479);
+}
+.form-control {
+  background-color: transparent;
+}
+.form-control:focus {
+  background-color: transparent;
 }
 </style>
