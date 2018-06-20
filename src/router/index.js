@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import store from '../store/store'
 
 import Home from '../components/main/Home.vue'
+import Bars from '../components/bars/Bars.vue'
 import LogIn from '../components/auth/LogIn.vue'
 import SignUp from '../components/auth/SignUp.vue'
 
@@ -12,9 +13,12 @@ const routes = [
   { path: '/home',
     component: Home,
     meta: '0'},
+  { path: '/bars',
+    component: Bars,
+    meta: '1'},
   { path: '/signup',
     component: SignUp,
-    meta: '1',
+    meta: '2',
     beforeEnter: (to, from, next) => {
       store.commit('setInvalidCredentials', false)
       store.commit('setTakenCredentials', false)
@@ -22,7 +26,7 @@ const routes = [
     } },
   { path: '/login',
     component: LogIn,
-    meta: '2',
+    meta: '3',
     beforeEnter: (to, from, next) => {
       store.commit('setInvalidCredentials', false)
       store.commit('setTakenCredentials', false)

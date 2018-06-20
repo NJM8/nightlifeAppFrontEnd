@@ -13,6 +13,14 @@
           <a class="nav-link">Home</a>
         </router-link>
         <router-link
+          to="/bars"
+          tag="li"
+          active-class="active"
+          exact
+          class="nav-item">
+          <a class="nav-link">See Bars</a>
+        </router-link>
+        <router-link
           v-show="!getIsAuth"
           to="/signup"
           tag="li"
