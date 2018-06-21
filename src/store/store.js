@@ -13,7 +13,12 @@ export default new Vuex.Store({
     takenCredentials: false,
     returningUser: false,
     userMessage: null,
-    searchResults: []
+    searchResults: [],
+    location: {
+      lat: null,
+      long: null,
+      pretty: null
+    }
   },
   mutations: {
     setAuthUser (state, userData) {
@@ -42,6 +47,13 @@ export default new Vuex.Store({
     },
     setSearchResults (state, payload) {
       state.searchResults = payload
+    },
+    setLatLong (state, payload) {
+      state.location.lat = payload.lat
+      state.location.long = payload.long
+    },
+    setPrettyLocation (state, payload) {
+      state.location.pretty = payload
     }
   },
   actions: {
@@ -153,6 +165,10 @@ export default new Vuex.Store({
     },
     setUserMessage ({commit}, payload) {
       commit('setMessage', payload)
+    },
+    findBars ({commit}, payload) {
+      commit('setLatLong', payload)
+      // axios code to get pretty location and bars
     }
   },
   getters: {
@@ -176,6 +192,9 @@ export default new Vuex.Store({
     },
     getSearchResults (state) {
       return state.searchResults
+    },
+    getLocation (state) {
+      return state.location
     }
   }
 })
