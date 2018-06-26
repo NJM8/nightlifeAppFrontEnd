@@ -1,5 +1,5 @@
 <template>
-  <nav class="sidebar text-center text-white border-right border-white p-1">
+  <nav class="sidebar text-center text-white border-right border-white p-1 mx-3">
     <h2>Bar Meetup</h2>
     <div
       class="sidebar-sticky">
