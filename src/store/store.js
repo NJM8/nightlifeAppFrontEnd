@@ -16,7 +16,7 @@ export default new Vuex.Store({
     searchResults: [],
     location: {
       lat: null,
-      long: null,
+      lng: null,
       pretty: null
     }
   },
@@ -48,9 +48,9 @@ export default new Vuex.Store({
     setSearchResults (state, payload) {
       state.searchResults = payload
     },
-    setLatLong (state, payload) {
+    setLatLng (state, payload) {
       state.location.lat = payload.lat
-      state.location.long = payload.long
+      state.location.lng = payload.lng
     },
     setPrettyLocation (state, payload) {
       state.location.pretty = payload
@@ -58,7 +58,7 @@ export default new Vuex.Store({
   },
   actions: {
     signUp ({commit, dispatch}, authData) {
-      axios.post('/auth/signup', {
+      axios.post('/signup', {
         email: authData.email,
         password: authData.password,
         username: authData.username
@@ -81,7 +81,7 @@ export default new Vuex.Store({
         })
     },
     logIn ({commit, dispatch}, authData) {
-      axios.post('/auth/login', {
+      axios.post('/login', {
         username: authData.username,
         password: authData.password
       })
@@ -129,7 +129,7 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.post('/auth/verifyUser', { idToken: state.idToken })
+      axios.post('/verifyUser', { idToken: state.idToken })
         .then(res => {
           commit('setStoreUser', res.data.username)
           commit('setAuthUser', {
@@ -166,9 +166,21 @@ export default new Vuex.Store({
     setUserMessage ({commit}, payload) {
       commit('setMessage', payload)
     },
-    findBars ({commit}, payload) {
-      commit('setLatLong', payload)
-      // axios code to get pretty location and bars
+    findBars ({commit, state}, payload) {
+      console.log(payload)
+      commit('setLatLng', payload)
+      axios.post('/findBars', {
+        idToken: state.idToken,
+        location: payload.location || '',
+        latitude: payload.lat || '',
+        longitude: payload.lng || ''
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   getters: {

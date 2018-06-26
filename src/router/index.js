@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/store'
-
 import Home from '../components/main/Home.vue'
 import Bars from '../components/bars/Bars.vue'
 import LogIn from '../components/auth/LogIn.vue'

@@ -14,9 +14,9 @@
         placeholder="New York City">
       <button
         type="submit"
-        class="btn btn-outline-primary text-white float-right m-1">Search</button>
+        class="btn btn-outline-primary text-white float-right mt-1">Search</button>
       <button
-        class="btn btn-outline-info text-white float-right m-1"
+        class="btn btn-outline-info text-white float-right mt-1 mr-1"
         @click.prevent="findLatLong">Find Me</button>
     </form>
   </div>
@@ -38,8 +38,12 @@ export default {
     findLatLong () {
       this.$getLocation()
         .then(coordinates => {
-          console.log(coordinates)
+          this.findBars(coordinates)
         })
+    },
+    onSearch () {
+      this.findBars({ location: this.searchLocation })
+      this.searchLocation = ''
     }
   }
 }
