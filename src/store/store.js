@@ -167,7 +167,6 @@ export default new Vuex.Store({
       commit('setMessage', payload)
     },
     findBars ({commit, state}, payload) {
-      console.log(payload)
       commit('setLatLng', payload)
       axios.post('/findBars', {
         idToken: state.idToken,
@@ -177,6 +176,8 @@ export default new Vuex.Store({
       })
         .then(res => {
           console.log(res)
+          commit('setSearchResults', res.data.sort((a, b) => a.distance > b.distance))
+          commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}`)
         })
         .catch(error => {
           console.log(error)
@@ -205,7 +206,7 @@ export default new Vuex.Store({
     getSearchResults (state) {
       return state.searchResults
     },
-    getLocation (state) {
+    getSearchedLocation (state) {
       return state.location
     }
   }
