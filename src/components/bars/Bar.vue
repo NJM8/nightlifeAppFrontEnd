@@ -2,7 +2,7 @@
   <div class="col-11 mx-auto my-4 text-white d-flex">
     <div>
       <img
-        :src="bardata.image_url"
+        :src="bardata.image_url || '/static/Beers.jpg'"
         :alt="bardata.alias"
         class="image border border-white rounded mt-2">
     </div>
