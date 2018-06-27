@@ -33,8 +33,7 @@
         class="btn-group mt-3"
         role="group">
         <a
-          :title="`There are ${getPeopleHere.length} here.`"
-          :data-content="`${getPeopleHere}`"
+          :title="`There are ${getPeopleHere.length} people here.`"
           data-toggle="popover"
           data-placement="top"
           class="btn btn-sm btn-outline-info text-white">See who is here</a>
@@ -88,13 +87,28 @@ export default {
       }
     },
     getPeopleHere () {
-      return ['Bill', 'Adam', 'Stacy']
+      return ['Bill Long', 'Adam Trunk', 'Stacy Lacy', 'June Summer']
+    },
+    getPeopleHereHTML () {
+      let HTML = document.createElement('ul')
+      HTML.classList.add('list-group')
+      const people = this.getPeopleHere
+      for (const person of people) {
+        let li = document.createElement('li')
+        li.classList.add('list-group-item')
+        li.innerHTML = person
+        HTML.appendChild(li)
+      }
+      return HTML
     }
   },
   mounted () {
     Vue.nextTick(() => {
       /* eslint-disable */
-      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="popover"]').popover({
+        html: true, 
+        content: this.getPeopleHereHTML
+      })
       $('[data-toggle="tooltip"]').tooltip()
       /* eslint-enable */
     })
