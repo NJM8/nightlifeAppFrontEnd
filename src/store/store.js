@@ -166,7 +166,7 @@ export default new Vuex.Store({
     setUserMessage ({commit}, payload) {
       commit('setMessage', payload)
     },
-    findBars ({commit, state}, payload) {
+    findBars ({commit, dispatch, state}, payload) {
       commit('setLatLng', payload)
       axios.post('/findBars', {
         idToken: state.idToken,
@@ -180,6 +180,9 @@ export default new Vuex.Store({
           commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}`)
         })
         .catch(error => {
+          if (error.response.status === 400) {
+            dispatch('setUserMessage', error.response.data)
+          }
           console.log(error)
         })
     }
