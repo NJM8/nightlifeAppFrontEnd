@@ -37,7 +37,9 @@
           data-toggle="popover"
           data-placement="top"
           class="btn btn-sm btn-outline-info text-white">See who is here</a>
-        <button class="btn btn-sm btn-outline-primary text-white">Be Here</button>
+        <button
+          class="btn btn-sm btn-outline-primary text-white"
+          @click="checkIn(bardata.id)">Check In</button>
       </div>
       <button
         class="btn btn-sm btn-outline-success text-white mt-2"
@@ -48,6 +50,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -114,6 +117,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions([
+      'checkIn'
+    ]),
     shareOnTwitter () {
       const tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent('I\'m going to ') + encodeURIComponent(this.bardata.name) + encodeURIComponent(' tonight, come join me!')
       window.open(tweetUrl)

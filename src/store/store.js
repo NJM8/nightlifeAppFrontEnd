@@ -18,7 +18,8 @@ export default new Vuex.Store({
       lat: null,
       lng: null,
       pretty: null
-    }
+    },
+    userLocation: null
   },
   mutations: {
     setAuthUser (state, userData) {
@@ -54,6 +55,9 @@ export default new Vuex.Store({
     },
     setPrettyLocation (state, payload) {
       state.location.pretty = payload
+    },
+    setUserCheckIn (state, payload) {
+      state.userLocation = payload
     }
   },
   actions: {
@@ -185,6 +189,13 @@ export default new Vuex.Store({
           }
           console.log(error)
         })
+    },
+    checkIn ({commit, dispatch, state}, payload) {
+      if (state.idToken === null) {
+        dispatch('setUserMessage', 'You must log in to check in at a bar.')
+        return
+      }
+      commit('setUserCheckIn', payload)
     }
   },
   getters: {
