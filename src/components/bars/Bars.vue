@@ -24,9 +24,9 @@
       </form>
     </div>
     <div class="mt-4 text-white">
-      <h3
+      <h2
         v-if="getSearchedLocation.pretty"
-        class="text-nowrap text-center">Showing bars in {{ getSearchedLocation.pretty }}</h3>
+        class="text-nowrap text-center">Showing bars in {{ getSearchedLocation.pretty }}</h2>
       <div v-if="getSearchResults.length > 0">
         <bar
           v-for="(bar, index) in getSearchResults"
