@@ -19,17 +19,25 @@
           :src="getRatingPng"
           alt="rating">
         <a :href="bardata.url"><img
+          :title="`Visit ${bardata.name} on Yelp`"
           src="/static/YelpLogo_Trademark/Screen(R)/Yelp_trademark_RGB_outline.png"
           alt="Yelp Logo"
           class="yelpLogo"
           target="_blank"
-          rel="noopener"></a>
+          rel="noopener"
+          data-toggle="tooltip"
+          data-placement="top"></a>
       </div>
       <p>{{ bardata.rating }} stars based on {{ bardata.review_count }} reviews</p>
       <div
         class="btn-group mt-3"
         role="group">
-        <button class="btn btn-sm btn-outline-info text-white">See who is here</button>
+        <a
+          :title="`There are ${getPeopleHere.length} here.`"
+          :data-content="`${getPeopleHere}`"
+          data-toggle="popover"
+          data-placement="top"
+          class="btn btn-sm btn-outline-info text-white">See who is here</a>
         <button class="btn btn-sm btn-outline-primary text-white">Be Here</button>
       </div>
       <button
@@ -40,6 +48,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
   props: {
     bardata: {
@@ -76,7 +86,18 @@ export default {
         default:
           return '/static/yelp_stars/web_and_ios/regular/regular_0.png'
       }
+    },
+    getPeopleHere () {
+      return ['Bill', 'Adam', 'Stacy']
     }
+  },
+  mounted () {
+    Vue.nextTick(() => {
+      /* eslint-disable */
+      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="tooltip"]').tooltip()
+      /* eslint-enable */
+    })
   },
   methods: {
     shareOnTwitter () {
