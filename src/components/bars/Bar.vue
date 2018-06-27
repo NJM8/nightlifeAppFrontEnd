@@ -32,7 +32,9 @@
         <button class="btn btn-sm btn-outline-info text-white">See who is here</button>
         <button class="btn btn-sm btn-outline-primary text-white">Be Here</button>
       </div>
-      <button class="btn btn-sm btn-outline-success text-white mt-2">Share on twitter</button>
+      <button
+        class="btn btn-sm btn-outline-success text-white mt-2"
+        @click="shareOnTwitter">Share on twitter</button>
     </div>
   </div>
 </template>
@@ -74,6 +76,12 @@ export default {
         default:
           return '/static/yelp_stars/web_and_ios/regular/regular_0.png'
       }
+    }
+  },
+  methods: {
+    shareOnTwitter () {
+      const tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent('I\'m going to ') + encodeURIComponent(this.bardata.name) + encodeURIComponent(' tonight, come join me!')
+      window.open(tweetUrl)
     }
   }
 }
