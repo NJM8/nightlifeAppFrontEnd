@@ -57,6 +57,19 @@ export default new Vuex.Store({
       state.location.pretty = payload
     },
     setUserCheckIn (state, payload) {
+      if (state.userLocation) {
+        state.searchResults.forEach(location => {
+          if (location.id === state.userLocation) {
+            const index = location.peopleHere.indexOf(state.username)
+            location.peopleHere.splice(index, 1)
+          }
+        })
+      }
+      state.searchResults.forEach(location => {
+        if (location.id === payload) {
+          location.peopleHere.push(state.username)
+        }
+      })
       state.userLocation = payload
     }
   },
@@ -179,7 +192,6 @@ export default new Vuex.Store({
         longitude: payload.lng || ''
       })
         .then(res => {
-          console.log(res)
           commit('setSearchResults', res.data.sort((a, b) => a.distance > b.distance))
           commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}`)
         })
@@ -196,6 +208,8 @@ export default new Vuex.Store({
         return
       }
       commit('setUserCheckIn', payload)
+      const bar = state.searchResults.find(bar => bar.id === payload)
+      dispatch('setUserMessage', `You are checked in to ${bar.name}, invite your friends on Twitter!`)
     }
   },
   getters: {
