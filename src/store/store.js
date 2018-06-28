@@ -184,6 +184,7 @@ export default new Vuex.Store({
       commit('setMessage', payload)
     },
     findBars ({commit, dispatch, state}, payload) {
+      dispatch('setUserMessage', 'Finding bars')
       commit('setLatLng', payload)
       axios.post('/findBars', {
         idToken: state.idToken,
