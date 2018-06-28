@@ -192,6 +192,11 @@ export default new Vuex.Store({
         longitude: payload.lng || ''
       })
         .then(res => {
+          res.data.forEach(bar => {
+            if (bar.peopleHere.includes(state.username)) {
+              commit('setUserCheckIn', bar.id)
+            }
+          })
           commit('setSearchResults', res.data.sort((a, b) => a.distance > b.distance))
           commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}`)
         })
@@ -211,9 +216,27 @@ export default new Vuex.Store({
         dispatch('setUserMessage', 'You are already checked in here')
         return
       }
+      if (state.userLocation) {
+        axios.post('/checkOut', {
+          barId: state.userLocation,
+          peopleHere: state.username
+        }).then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
+        })
+      }
       commit('setUserCheckIn', payload)
       const bar = state.searchResults.find(bar => bar.id === payload)
       dispatch('setUserMessage', `You are checked in to ${bar.name}, invite your friends on Twitter!`)
+      axios.post('/checkIn', {
+        barId: payload,
+        peopleHere: state.username
+      }).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   getters: {
