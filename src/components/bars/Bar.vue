@@ -29,27 +29,27 @@
           data-placement="top"></a>
       </div>
       <p>{{ bardata.rating }} stars based on {{ bardata.review_count }} reviews</p>
+      <p>Who is here?</p>
+      <p v-if="bardata.peopleHere.length === 0">No one yet</p>
+      <p
+        v-for="(person, index) in bardata.peopleHere"
+        v-else
+        :key="index">{{ person }}</p>
       <div
         class="btn-group mt-3"
         role="group">
-        <a
-          :title="`There are ${getPeopleHere.length} people here.`"
-          data-toggle="popover"
-          data-placement="top"
-          class="btn btn-sm btn-outline-info text-white">See who is here</a>
         <button
           class="btn btn-sm btn-outline-primary text-white"
           @click="checkIn(bardata.id)">Check In</button>
+        <button
+          class="btn btn-sm btn-outline-success text-white"
+          @click="shareOnTwitter">Share on twitter</button>
       </div>
-      <button
-        class="btn btn-sm btn-outline-success text-white mt-2"
-        @click="shareOnTwitter">Share on twitter</button>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapActions } from 'vuex'
 
 export default {
@@ -88,33 +88,7 @@ export default {
         default:
           return '/static/yelp_stars/web_and_ios/regular/regular_0.png'
       }
-    },
-    getPeopleHere () {
-      return ['Bill Long', 'Adam Trunk', 'Stacy Lacy', 'June Summer']
-    },
-    getPeopleHereHTML () {
-      let HTML = document.createElement('ul')
-      HTML.classList.add('list-group')
-      const people = this.getPeopleHere
-      for (const person of people) {
-        let li = document.createElement('li')
-        li.classList.add('list-group-item')
-        li.innerHTML = person
-        HTML.appendChild(li)
-      }
-      return HTML
     }
-  },
-  mounted () {
-    Vue.nextTick(() => {
-      /* eslint-disable */
-      $('[data-toggle="popover"]').popover({
-        html: true, 
-        content: this.getPeopleHereHTML
-      })
-      $('[data-toggle="tooltip"]').tooltip()
-      /* eslint-enable */
-    })
   },
   methods: {
     ...mapActions([
@@ -139,5 +113,8 @@ p {
 }
 .yelpLogo {
   width: 100px;
+}
+.person-list {
+  padding: 2px 4px 2px 4px !important;
 }
 </style>

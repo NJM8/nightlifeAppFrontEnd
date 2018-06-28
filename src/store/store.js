@@ -204,7 +204,11 @@ export default new Vuex.Store({
     },
     checkIn ({commit, dispatch, state}, payload) {
       if (state.idToken === null) {
-        dispatch('setUserMessage', 'You must log in to check in at a bar.')
+        dispatch('setUserMessage', 'You must log in to check in')
+        return
+      }
+      if (state.userLocation === payload) {
+        dispatch('setUserMessage', 'You are already checked in here')
         return
       }
       commit('setUserCheckIn', payload)
