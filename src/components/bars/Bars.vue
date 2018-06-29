@@ -1,9 +1,7 @@
 <template>
   <div class="col-12 flex flex-column">
     <div class="col-sm-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3 mt-4">
-      <form
-        class="p-3"
-        @submit.prevent="onSearch">
+      <div class="p-3">
         <label
           class="text-white"
           for="search">Search</label>
@@ -12,7 +10,8 @@
           type="text"
           class="form-control text-white"
           aria-describedby="search"
-          placeholder="New York City">
+          placeholder="New York City"
+          @keyup.enter.prevent="onSearch">
         <div class="d-flex flex mt-1">
           <select
             v-if="getLocationsSearched.length > 0"
@@ -31,9 +30,10 @@
             @click.prevent="findLatLong">Find Me</button>
           <button
             type="submit"
-            class="btn btn-outline-primary text-white">Search</button>
+            class="btn btn-outline-primary text-white"
+            @click.prevent="onSearch">Search</button>
         </div>
-      </form>
+      </div>
     </div>
     <transition
       name="fade"
@@ -84,8 +84,10 @@ export default {
         })
     },
     onSearch () {
+      console.log(this.searchLocation)
       this.findBars({ location: this.searchLocation })
       this.searchLocation = ''
+      this.selectedPreviousSearch = 'Select a previous search'
     },
     searchPreviousLocation () {
       if (this.selectedPreviousSearch === 'Select a previous search') {
