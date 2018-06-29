@@ -19,7 +19,8 @@ export default new Vuex.Store({
       lng: null,
       pretty: null
     },
-    userLocation: null
+    userLocation: null,
+    locationsSearched: []
   },
   mutations: {
     setAuthUser (state, userData) {
@@ -71,6 +72,12 @@ export default new Vuex.Store({
         }
       })
       state.userLocation = payload
+    },
+    setLocationsSearched (state, payload) {
+      state.locationsSearched = payload
+    },
+    addToLocationsSearched (state, payload) {
+      state.locationsSearched.push(payload)
     }
   },
   actions: {
@@ -108,6 +115,7 @@ export default new Vuex.Store({
             idToken: res.data.idToken,
             username: authData.username
           })
+          commit('setLocationsSearched', res.data.locationsSearched)
           dispatch('storeDataToLocalStorage', { expiresIn: res.data.expiresIn, idToken: res.data.idToken })
           dispatch('setUserMessage', res.data.message)
           router.push('/userPage')
@@ -138,6 +146,7 @@ export default new Vuex.Store({
     },
     logout ({commit, dispatch}) {
       commit('setClearAuthData')
+      commit('setLocationsSearched', [])
       dispatch('setUserMessage', 'Logged out')
       localStorage.removeItem('nightlifeAppUserData')
       router.replace('/home')
@@ -153,6 +162,7 @@ export default new Vuex.Store({
             idToken: res.data.idToken,
             username: res.data.username
           })
+          commit('setLocationsSearched', res.data.locationsSearched)
           dispatch('storeDataToLocalStorage', { expiresIn: res.data.expiresIn, idToken: res.data.idToken })
           dispatch('setUserMessage', res.data.message)
           router.push('/userPage')
@@ -185,7 +195,8 @@ export default new Vuex.Store({
     },
     findBars ({commit, dispatch, state}, payload) {
       if (state.searchResults) {
-        state.searchResults = []
+        commit('setSearchResults', [])
+        commit('setPrettyLocation', '')
       }
       dispatch('setUserMessage', 'Finding bars')
       commit('setLatLng', payload)
@@ -202,7 +213,10 @@ export default new Vuex.Store({
             }
           })
           commit('setSearchResults', res.data.sort((a, b) => a.distance > b.distance))
-          commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}`)
+          commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}, ${res.data[0].location.country}`)
+          if (!state.locationsSearched.includes(state.location.pretty)) {
+            commit('addToLocationsSearched', state.location.pretty)
+          }
         })
         .catch(error => {
           if (error.response.status === 400) {
@@ -265,8 +279,11 @@ export default new Vuex.Store({
     getSearchResults (state) {
       return state.searchResults
     },
-    getSearchedLocation (state) {
+    getLocation (state) {
       return state.location
+    },
+    getLocationsSearched (state) {
+      return state.locationsSearched
     }
   }
 })

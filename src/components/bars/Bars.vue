@@ -25,14 +25,17 @@
     </div>
     <div class="mt-4 text-white">
       <h2
-        v-if="getSearchedLocation.pretty"
-        class="text-nowrap text-center">Showing bars in {{ getSearchedLocation.pretty }}</h2>
-      <div v-if="getSearchResults.length > 0">
-        <bar
-          v-for="(bar, index) in getSearchResults"
-          :bardata="getSearchResults[index]"
-          :key="index"/>
-      </div>
+        v-if="getLocation.pretty"
+        class="text-nowrap text-center">Showing bars in {{ getLocation.pretty }}</h2>
+      <transition name="fade">
+        <div v-if="getSearchResults.length > 0">
+          <bar
+            v-for="(bar, index) in getSearchResults"
+            :bardata="getSearchResults[index]"
+            :key="bar.id"
+            :data-index="index"/>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -52,7 +55,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getSearchedLocation',
+      'getLocation',
       'getSearchResults'
     ])
   },
@@ -80,5 +83,15 @@ export default {
 }
 .form-control:focus {
   background-color: transparent;
+}
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 1s;
+}
+.fade-leave-active {
+  transition: all 1s;
+  opacity: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-11 mx-auto my-4 text-white d-flex">
+  <div class="col-11 mx-auto my-4 text-white d-flex bar">
     <div>
       <img
         :src="bardata.image_url || '/static/Beers.jpg'"
