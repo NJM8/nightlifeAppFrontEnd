@@ -230,6 +230,7 @@ export default new Vuex.Store({
           if (!state.locationsSearched.includes(state.location.pretty) && state.username) {
             commit('addToLocationsSearched', state.location.pretty)
           }
+          dispatch('setUserMessage', null)
         })
         .catch(error => {
           if (error.response.status === 400) {
