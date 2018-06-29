@@ -36,7 +36,7 @@ export default {
       clearTimeout(this.modalTimer)
       this.modalTimer = setTimeout(() => {
         this.setUserMessage(null)
-      }, 2000)
+      }, 1200)
     }
   },
   methods: {

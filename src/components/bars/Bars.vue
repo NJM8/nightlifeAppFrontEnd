@@ -15,7 +15,7 @@
           placeholder="New York City">
         <div class="d-flex flex mt-1">
           <select
-            v-if="getLocationsSearched"
+            v-if="getLocationsSearched.length > 0"
             v-model="selectedPreviousSearch"
             class="custom-select"
             @change="searchPreviousLocation">
@@ -26,6 +26,7 @@
               :value="search">{{ search }}</option>
           </select>
           <button
+            :class="getLocationsSearched.length > 0 ? 'mx-1' : 'ml-auto'"
             class="btn btn-outline-info text-white mx-1"
             @click.prevent="findLatLong">Find Me</button>
           <button

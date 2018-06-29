@@ -71,6 +71,8 @@ export default new Vuex.Store({
           location.peopleHere.push(state.username)
         }
       })
+    },
+    setUserLocation (state, payload) {
       state.userLocation = payload
     },
     setLocationsSearched (state, payload) {
@@ -104,7 +106,7 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    logIn ({commit, dispatch}, authData) {
+    logIn ({commit, dispatch, state}, authData) {
       axios.post('/login', {
         username: authData.username,
         password: authData.password
@@ -118,6 +120,14 @@ export default new Vuex.Store({
           commit('setLocationsSearched', res.data.locationsSearched)
           dispatch('storeDataToLocalStorage', { expiresIn: res.data.expiresIn, idToken: res.data.idToken })
           dispatch('setUserMessage', res.data.message)
+          commit('setUserLocation', res.data.currentLocation)
+          if (state.searchResults) {
+            state.searchResults.forEach(bar => {
+              if (bar.peopleHere.includes(state.username)) {
+                commit('setUserLocation', bar.id)
+              }
+            })
+          }
           router.push('/userPage')
         })
         .catch(error => {
@@ -147,6 +157,7 @@ export default new Vuex.Store({
     logout ({commit, dispatch}) {
       commit('setClearAuthData')
       commit('setLocationsSearched', [])
+      commit('setUserLocation', '')
       dispatch('setUserMessage', 'Logged out')
       localStorage.removeItem('nightlifeAppUserData')
       router.replace('/home')
@@ -163,6 +174,7 @@ export default new Vuex.Store({
             username: res.data.username
           })
           commit('setLocationsSearched', res.data.locationsSearched)
+          commit('setUserLocation', res.data.currentLocation)
           dispatch('storeDataToLocalStorage', { expiresIn: res.data.expiresIn, idToken: res.data.idToken })
           dispatch('setUserMessage', res.data.message)
           router.push('/userPage')
@@ -210,11 +222,12 @@ export default new Vuex.Store({
           res.data.forEach(bar => {
             if (bar.peopleHere.includes(state.username)) {
               commit('setUserCheckIn', bar.id)
+              commit('setUserLocation', bar.id)
             }
           })
           commit('setSearchResults', res.data.sort((a, b) => a.distance > b.distance))
           commit('setPrettyLocation', `${res.data[0].location.city}, ${res.data[0].location.state}, ${res.data[0].location.country}`)
-          if (!state.locationsSearched.includes(state.location.pretty)) {
+          if (!state.locationsSearched.includes(state.location.pretty) && state.username) {
             commit('addToLocationsSearched', state.location.pretty)
           }
         })
@@ -245,6 +258,7 @@ export default new Vuex.Store({
         })
       }
       commit('setUserCheckIn', payload)
+      commit('setUserLocation', payload)
       const bar = state.searchResults.find(bar => bar.id === payload)
       dispatch('setUserMessage', `You are checked in to ${bar.name}, invite your friends on Twitter!`)
       axios.post('/checkIn', {
