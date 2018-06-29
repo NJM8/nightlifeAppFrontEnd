@@ -40,7 +40,7 @@
         role="group">
         <button
           class="btn btn-sm btn-outline-primary text-white"
-          @click="checkIn(bardata.id)">Check In</button>
+          @click="checkInOut(bardata.id)">{{ checkInOrOut }}</button>
         <button
           class="btn btn-sm btn-outline-success text-white"
           @click="shareOnTwitter">Share on twitter</button>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -62,6 +62,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'getUserLocation'
+    ]),
     distanceInMiles () {
       return (this.bardata.distance * 0.000621371).toFixed(2)
     },
@@ -88,11 +91,14 @@ export default {
         default:
           return '/static/yelp_stars/web_and_ios/regular/regular_0.png'
       }
+    },
+    checkInOrOut () {
+      return this.bardata.id === this.getUserLocation ? 'Check Out' : 'Check In'
     }
   },
   methods: {
     ...mapActions([
-      'checkIn'
+      'checkInOut'
     ]),
     shareOnTwitter () {
       const tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent('I\'m going to ') + encodeURIComponent(this.bardata.name) + encodeURIComponent(' tonight, come join me!')

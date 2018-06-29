@@ -8,7 +8,7 @@
           <div class="modal-body">
             <p>{{ getMessage }}</p>
             <button
-              class="btn btn-info"
+              class="btn btn-info mt-3"
               @click="closeModal">Ok</button>
           </div>
         </div>
@@ -21,30 +21,16 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  data () {
-    return {
-      modalTimer: null
-    }
-  },
   computed: {
     ...mapGetters([
       'getMessage'
     ])
-  },
-  watch: {
-    getMessage: function () {
-      clearTimeout(this.modalTimer)
-      this.modalTimer = setTimeout(() => {
-        this.setUserMessage(null)
-      }, 1200)
-    }
   },
   methods: {
     ...mapActions([
       'setUserMessage'
     ]),
     closeModal () {
-      clearTimeout(this.modalTimer)
       this.setUserMessage(null)
     }
   }

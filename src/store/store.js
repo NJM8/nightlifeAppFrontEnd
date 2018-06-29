@@ -58,17 +58,17 @@ export default new Vuex.Store({
       state.location.pretty = payload
     },
     setUserCheckIn (state, payload) {
-      if (state.userLocation) {
-        state.searchResults.forEach(location => {
-          if (location.id === state.userLocation) {
-            const index = location.peopleHere.indexOf(state.username)
-            location.peopleHere.splice(index, 1)
-          }
-        })
-      }
       state.searchResults.forEach(location => {
         if (location.id === payload) {
           location.peopleHere.push(state.username)
+        }
+      })
+    },
+    setUserCheckOut (state, payload) {
+      state.searchResults.forEach(location => {
+        if (location.id === payload) {
+          const index = location.peopleHere.indexOf(state.username)
+          location.peopleHere.splice(index, 1)
         }
       })
     },
@@ -238,24 +238,24 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    checkIn ({commit, dispatch, state}, payload) {
+    checkInOut ({commit, dispatch, state}, payload) {
       if (state.idToken === null) {
         dispatch('setUserMessage', 'You must log in to check in')
         return
       }
       if (state.userLocation === payload) {
-        dispatch('setUserMessage', 'You are already checked in here')
-        return
-      }
-      if (state.userLocation) {
         axios.post('/checkOut', {
           barId: state.userLocation,
           peopleHere: state.username
         }).then(res => {
-          console.log(res)
         }).catch(error => {
           console.log(error)
         })
+        commit('setUserCheckOut', payload)
+        commit('setUserLocation', null)
+        const bar = state.searchResults.find(bar => bar.id === payload)
+        dispatch('setUserMessage', `You are checked out of ${bar.name}`)
+        return
       }
       commit('setUserCheckIn', payload)
       commit('setUserLocation', payload)
@@ -265,7 +265,6 @@ export default new Vuex.Store({
         barId: payload,
         peopleHere: state.username
       }).then(res => {
-        console.log(res)
       }).catch(error => {
         console.log(error)
       })
@@ -298,6 +297,9 @@ export default new Vuex.Store({
     },
     getLocationsSearched (state) {
       return state.locationsSearched
+    },
+    getUserLocation (state) {
+      return state.userLocation
     }
   }
 })
