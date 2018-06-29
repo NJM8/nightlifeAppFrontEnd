@@ -17,7 +17,7 @@ Vue.use(VueGeolocation)
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = 'http://localhost:8000'
 } else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'https://natethedev-votingappbackend.herokuapp.com/'
+  axios.defaults.baseURL = 'https://natethedev-nightlifeappbackend.herokuapp.com/'
 }
 
 /* eslint-disable no-new */
