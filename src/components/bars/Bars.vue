@@ -13,30 +13,41 @@
           class="form-control text-white"
           aria-describedby="search"
           placeholder="New York City">
-        <div class="d-flex flex-row-reverse">
+        <div class="d-flex flex mt-1">
+          <select
+            v-if="getLocationsSearched"
+            v-model="selectedPreviousSearch"
+            class="custom-select"
+            @change="searchPreviousLocation">
+            <option>Select a previous search</option>
+            <option
+              v-for="(search, index) in getLocationsSearched"
+              :key="index"
+              :value="search">{{ search }}</option>
+          </select>
+          <button
+            class="btn btn-outline-info text-white mx-1"
+            @click.prevent="findLatLong">Find Me</button>
           <button
             type="submit"
-            class="btn btn-outline-primary text-white mt-1">Search</button>
-          <button
-            class="btn btn-outline-info text-white mt-1 mr-1"
-            @click.prevent="findLatLong">Find Me</button>
+            class="btn btn-outline-primary text-white">Search</button>
         </div>
       </form>
     </div>
-    <div class="mt-4 text-white">
-      <h2
-        v-if="getLocation.pretty"
-        class="text-nowrap text-center">Showing bars in {{ getLocation.pretty }}</h2>
-      <transition name="fade">
-        <div v-if="getSearchResults.length > 0">
-          <bar
-            v-for="(bar, index) in getSearchResults"
-            :bardata="getSearchResults[index]"
-            :key="bar.id"
-            :data-index="index"/>
-        </div>
-      </transition>
-    </div>
+    <transition
+      name="fade"
+      appear>
+      <div
+        v-if="getSearchResults.length > 0"
+        class="mt-4 text-white">
+        <h2 class="text-nowrap text-center">Showing bars in {{ getLocation.pretty }}</h2>
+        <bar
+          v-for="(bar, index) in getSearchResults"
+          :bardata="getSearchResults[index]"
+          :key="bar.id"
+          :data-index="index"/>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -50,13 +61,15 @@ export default {
   },
   data () {
     return {
-      searchLocation: ''
+      searchLocation: '',
+      selectedPreviousSearch: 'Select a previous search'
     }
   },
   computed: {
     ...mapGetters([
       'getLocation',
-      'getSearchResults'
+      'getSearchResults',
+      'getLocationsSearched'
     ])
   },
   methods: {
@@ -72,6 +85,13 @@ export default {
     onSearch () {
       this.findBars({ location: this.searchLocation })
       this.searchLocation = ''
+    },
+    searchPreviousLocation () {
+      if (this.selectedPreviousSearch === 'Select a previous search') {
+        return
+      }
+      this.searchLocation = this.selectedPreviousSearch
+      this.onSearch()
     }
   }
 }
@@ -93,5 +113,11 @@ export default {
 .fade-leave-active {
   transition: all 1s;
   opacity: 0;
+}
+.custom-select {
+  background-color: transparent;
+  color: white;
+  border-color: turquoise;
+  cursor: pointer;
 }
 </style>
