@@ -212,12 +212,17 @@ export default new Vuex.Store({
       }
       dispatch('setUserMessage', 'Finding bars')
       commit('setLatLng', payload)
-      axios.post('/findBars', {
-        idToken: state.idToken,
-        location: payload.location || '',
-        latitude: payload.lat || '',
-        longitude: payload.lng || ''
-      })
+
+      const searchPayload = {
+        idToken: state.idToken
+      }
+      if (payload.hasOwnProperty('location')) {
+        searchPayload.location = payload.location
+      } else {
+        searchPayload.latitude = payload.lat
+        searchPayload.longitude = payload.lng
+      }
+      axios.post('/findBars', searchPayload)
         .then(res => {
           res.data.forEach(bar => {
             if (bar.peopleHere.includes(state.username)) {
